@@ -1,0 +1,8 @@
+{
+  "name": "Lunar-Vision | Студия разработки и автоматизации",
+  "description": "Официальный сайт IT-студии Lunar-Vision. Разработка высокоскоростных сайтов, Telegram/Discord/AI-ботов, проектирование Backend и БД, DevOps и реклама.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

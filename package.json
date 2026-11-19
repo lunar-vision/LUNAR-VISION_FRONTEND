@@ -1,0 +1,13 @@
+{
+  "name": "lunar-vision-static",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "node -e \"const h=require('http'),f=require('fs'),p=require('path');const m={'.html':'text/html; charset=utf-8','.js':'application/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg','.webp':'image/webp','.ico':'image/x-icon','.json':'application/json'};const root=process.cwd();const port=Number(process.env.PORT)||3000;h.createServer((q,s)=>{let u=(q.url||'/').split('?')[0];if(u==='/')u='/index.html';let dec='/index.html';try{dec=decodeURIComponent(u);}catch(e){}const fp=p.resolve(root,'.'+dec);if(fp!==root&&!fp.startsWith(root+p.sep)){s.writeHead(403);s.end('Forbidden');return;}f.readFile(fp,(e,d)=>{if(e){s.writeHead(404,{'Content-Type':'text/plain; charset=utf-8'});s.end('Not Found');return;}s.writeHead(200,{'Content-Type':m[p.extname(fp).toLowerCase()]||'application/octet-stream','Cache-Control':'no-cache'});s.end(d);});}).listen(port,'0.0.0.0',()=>console.log('Lunar-Vision static server running at http://0.0.0.0:'+port));\" --",
+    "start": "npm run dev",
+    "build": "node --check script.js && echo 'Static HTML build verified'",
+    "lint": "node --check script.js"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

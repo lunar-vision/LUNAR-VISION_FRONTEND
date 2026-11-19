@@ -1,0 +1,1842 @@
+<!DOCTYPE html>
+<html lang="ru" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lunar-Vision — Студия разработки, автоматизации и серверной архитектуры</title>
+  <meta name="description" content="Valerii Prokhorov & Andrian Tokar. Два senior-инженера полного цикла. Разработка высокоскоростных сайтов, Telegram/AI-ботов, backend-систем, Docker/DevOps и продвижение." />
+  <meta property="og:title" content="Lunar-Vision — Студия разработки и автоматизации" />
+  <meta property="og:description" content="Два senior-инженера полного цикла. Разработка сайтов, ботов, backend, DevOps и реклама." />
+  <meta property="og:type" content="website" />
+
+  <!-- Google Fonts: Unbounded (Display), Inter (Body), JetBrains Mono (Technical & Pricing) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Unbounded:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Unbounded', 'sans-serif'],
+            body: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    };
+    (function () {
+      try {
+        var t = localStorage.getItem('lunar-theme');
+        if (t === 'light') {
+          document.documentElement.classList.remove('dark');
+          document.documentElement.classList.add('light');
+        }
+      } catch (e) {}
+    })();
+  </script>
+
+  <!-- GSAP 3 & ScrollTrigger CDN + Общий Vanilla JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <script src="script.js" defer></script>
+
+  <style>
+    /* -------------------------------------------------------------
+       1. CSS ПЕРЕМЕННЫЕ (ТЁМНАЯ ПО УМОЛЧАНИЮ И СВЕТЛАЯ ТЕМА)
+    ------------------------------------------------------------- */
+    :root {
+      --bg-main: #09090B;
+      --bg-card: #121216;
+      --bg-card-hover: #18181E;
+      --bg-header: rgba(9, 9, 11, 0.85);
+      --bg-footer: #070709;
+      --bg-drawer: #0E0E14;
+      --bg-section-projects: rgba(14, 14, 18, 0.45);
+      --bg-section-contact: rgba(10, 10, 14, 0.65);
+      --bg-pill: #14141B;
+      --bg-price-box: #181822;
+      --bg-popular-card: #14141C;
+      --bg-popular-price: rgba(0, 245, 255, 0.06);
+      --bg-input: #16161F;
+      --bg-chip: #171720;
+      --bg-calc-bar: #14141D;
+      --bg-modal: #111116;
+      --bg-modal-node: #191922;
+      --bg-modal-result: #16161F;
+      --bg-preview: #15151C;
+      --border-subtle: #27272A;
+      --border-focus: #3F3F46;
+      --border-hairline: rgba(255, 255, 255, 0.07);
+      --text-primary: #F4F4F5;
+      --text-heading: #FFFFFF;
+      --text-body-strong: #E4E4E7;
+      --text-secondary: #A1A1AA;
+      --text-muted: #71717A;
+      --accent-cyan: #00F5FF;
+      --accent-cyan-dim: rgba(0, 245, 255, 0.12);
+      --accent-lime: #CCFF00;
+      --accent-lime-dim: rgba(204, 255, 0, 0.12);
+      --btn-primary-bg: #F4F4F5;
+      --btn-primary-text: #000000;
+      --btn-secondary-bg: rgba(255, 255, 255, 0.04);
+      --btn-secondary-hover-bg: rgba(255, 255, 255, 0.08);
+      --tag-bg: rgba(255, 255, 255, 0.04);
+      --tag-border: rgba(255, 255, 255, 0.08);
+      --grid-line: rgba(255, 255, 255, 0.025);
+      --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.45);
+      --font-display: 'Unbounded', sans-serif;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --max-width: 1240px;
+      --header-height: 74px;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+    }
+
+    html.light {
+      --bg-main: #F8FAFC;
+      --bg-card: rgba(255, 255, 255, 0.94);
+      --bg-card-hover: #FFFFFF;
+      --bg-header: rgba(248, 250, 252, 0.88);
+      --bg-footer: #F1F5F9;
+      --bg-drawer: #FFFFFF;
+      --bg-section-projects: rgba(241, 245, 249, 0.7);
+      --bg-section-contact: rgba(241, 245, 249, 0.82);
+      --bg-pill: #E2E8F0;
+      --bg-price-box: #F1F5F9;
+      --bg-popular-card: #FFFFFF;
+      --bg-popular-price: rgba(2, 132, 199, 0.06);
+      --bg-input: #FFFFFF;
+      --bg-chip: #F8FAFC;
+      --bg-calc-bar: #FFFFFF;
+      --bg-modal: #FFFFFF;
+      --bg-modal-node: #F1F5F9;
+      --bg-modal-result: #F8FAFC;
+      --bg-preview: #0F172A;
+      --border-subtle: #CBD5E1;
+      --border-focus: #94A3B8;
+      --border-hairline: rgba(15, 23, 42, 0.08);
+      --text-primary: #0F172A;
+      --text-heading: #09090B;
+      --text-body-strong: #1E293B;
+      --text-secondary: #475569;
+      --text-muted: #64748B;
+      --accent-cyan: #0284C7;
+      --accent-cyan-dim: rgba(2, 132, 199, 0.1);
+      --accent-lime: #4D7C0F;
+      --accent-lime-dim: rgba(77, 124, 15, 0.1);
+      --btn-primary-bg: #09090B;
+      --btn-primary-text: #FFFFFF;
+      --btn-secondary-bg: rgba(15, 23, 42, 0.04);
+      --btn-secondary-hover-bg: rgba(15, 23, 42, 0.08);
+      --tag-bg: rgba(15, 23, 42, 0.04);
+      --tag-border: rgba(15, 23, 42, 0.12);
+      --grid-line: rgba(15, 23, 42, 0.045);
+      --shadow-card: 0 12px 30px rgba(15, 23, 42, 0.08);
+    }
+
+    html {
+      scroll-behavior: smooth;
+      overflow-x: clip;
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    /* -------------------------------------------------------------
+       2. ИНЖЕНЕРНЫЙ ФОН: ШУМ, СЕТКА, СВЕЧЕНИЯ
+    ------------------------------------------------------------- */
+    .noise-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
+    .tech-grid {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-size: 48px 48px;
+      background-image:
+        linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+      mask-image: radial-gradient(ellipse at 50% 30%, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.15) 75%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse at 50% 30%, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.15) 75%, transparent 100%);
+    }
+
+    .ambient-glow {
+      position: fixed;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.12;
+    }
+
+    html.light .ambient-glow {
+      opacity: 0.07;
+    }
+
+    .glow-cyan {
+      top: 10%;
+      left: 65%;
+      background: #00F5FF;
+    }
+
+    .glow-lime {
+      top: 55%;
+      left: -10%;
+      background: #CCFF00;
+    }
+
+    /* -------------------------------------------------------------
+       3. КОМПОНЕНТЫ: SPOTLIGHT, КНОПКИ, ТЕГИ, ШАПКА
+    ------------------------------------------------------------- */
+    .container-main {
+      width: 100%;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .section-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .section-kicker .kicker-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
+      box-shadow: 0 0 8px var(--accent-cyan);
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.85rem, 3.2vw, 2.75rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.18;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+      text-wrap: balance;
+    }
+
+    .section-desc {
+      font-size: 16px;
+      color: var(--text-secondary);
+      max-width: 680px;
+      line-height: 1.65;
+    }
+
+    .spotlight-card {
+      position: relative;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      overflow: hidden;
+      transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+    }
+
+    .spotlight-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(
+        600px circle at var(--mouse-x, -1000px) var(--mouse-y, -1000px),
+        rgba(0, 245, 255, 0.08),
+        transparent 40%
+      );
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .spotlight-card:hover {
+      border-color: rgba(0, 245, 255, 0.35);
+      box-shadow: var(--shadow-card);
+    }
+
+    html.light .spotlight-card:hover {
+      border-color: rgba(2, 132, 199, 0.45);
+    }
+
+    .spotlight-card:hover::before {
+      opacity: 1;
+    }
+
+    .card-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 13px 26px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 14px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      white-space: nowrap;
+      text-decoration: none;
+      position: relative;
+    }
+
+    .btn-primary {
+      background: var(--btn-primary-bg);
+      color: var(--btn-primary-text);
+      border-color: var(--btn-primary-bg);
+      font-weight: 700;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-cyan);
+      border-color: var(--accent-cyan);
+      color: #000000;
+      box-shadow: 0 0 24px rgba(0, 245, 255, 0.4);
+    }
+
+    .btn-secondary {
+      background: var(--btn-secondary-bg);
+      color: var(--text-primary);
+      border-color: var(--border-subtle);
+    }
+
+    .btn-secondary:hover {
+      background: var(--btn-secondary-hover-bg);
+      border-color: var(--border-focus);
+      color: var(--text-heading);
+    }
+
+    .btn-accent {
+      background: #CCFF00;
+      color: #000000;
+      border-color: #CCFF00;
+      font-weight: 700;
+    }
+
+    .btn-accent:hover {
+      background: #d8ff2b;
+      box-shadow: 0 0 20px rgba(204, 255, 0, 0.45);
+    }
+
+    .tech-tag {
+      display: inline-flex;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: var(--tag-bg);
+      border: 1px solid var(--tag-border);
+      color: var(--text-secondary);
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    /* Шапка */
+    .site-header {
+      height: var(--header-height);
+      background: var(--bg-header);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-hairline);
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      white-space: nowrap !important;
+      transition: color 0.2s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--accent-cyan);
+    }
+
+    .status-badge {
+      color: var(--accent-lime);
+      background: rgba(204, 255, 0, 0.08);
+      border: 1px solid rgba(204, 255, 0, 0.25);
+    }
+
+    html.light .status-badge {
+      background: rgba(77, 124, 15, 0.08);
+      border-color: rgba(77, 124, 15, 0.28);
+    }
+
+    .status-pulse {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent-lime);
+      box-shadow: 0 0 10px var(--accent-lime);
+      animation: pulseAnim 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseAnim {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .theme-toggle-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      background: var(--btn-secondary-bg);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .theme-toggle-btn:hover {
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+
+    /* Hero + 3D терминал */
+    .hero-section {
+      padding-top: calc(var(--header-height) + 54px);
+      padding-bottom: 84px;
+      min-height: 90vh;
+    }
+
+    .hero-badge {
+      color: var(--accent-cyan);
+      background: var(--accent-cyan-dim);
+      border: 1px solid rgba(0, 245, 255, 0.25);
+    }
+
+    html.light .hero-badge {
+      border-color: rgba(2, 132, 199, 0.28);
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+      color: var(--text-heading);
+      text-wrap: balance;
+    }
+
+    .hero-title .highlight-cyan {
+      color: var(--accent-cyan);
+      text-shadow: 0 0 28px rgba(0, 245, 255, 0.35);
+    }
+
+    html.light .hero-title .highlight-cyan {
+      text-shadow: none;
+    }
+
+    .magnetic-wrap {
+      display: inline-block;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .hero-terminal-container {
+      perspective: 1200px;
+    }
+
+    .terminal-card {
+      background: #0E0E12;
+      border: 1px solid #27272A;
+      border-radius: var(--radius-md);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(0, 245, 255, 0.05);
+      transform-style: preserve-3d;
+      transition: transform 0.15s ease-out, box-shadow 0.3s ease;
+    }
+
+    html.light .terminal-card {
+      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.18);
+    }
+
+    .terminal-body {
+      height: 400px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #27272A transparent;
+    }
+
+    .term-cursor {
+      display: inline-block;
+      width: 7px;
+      height: 14px;
+      background: #00F5FF;
+      vertical-align: middle;
+      animation: cursorBlink 1s infinite step-start;
+    }
+
+    @keyframes cursorBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* Секции и карточки */
+    .section-spacing {
+      padding: 96px 0;
+      position: relative;
+    }
+
+    .founder-btn-link {
+      color: var(--text-primary);
+      border-top: 1px solid var(--border-hairline);
+      transition: color 0.2s ease, gap 0.2s ease;
+    }
+
+    .founder-btn-link:hover {
+      color: var(--accent-cyan);
+      gap: 12px;
+    }
+
+    /* Кейсы */
+    .filter-tab {
+      padding: 9px 18px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      background: var(--btn-secondary-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-tab:hover {
+      border-color: var(--border-focus);
+      color: var(--text-heading);
+    }
+
+    .filter-tab.active {
+      background: var(--btn-primary-bg);
+      color: var(--btn-primary-text);
+      border-color: var(--btn-primary-bg);
+    }
+
+    .case-preview-container {
+      background: var(--bg-preview);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .case-category {
+      color: var(--accent-cyan);
+    }
+
+    .case-title {
+      color: var(--text-heading);
+    }
+
+    .case-desc {
+      color: var(--text-secondary);
+    }
+
+    .case-footer {
+      border-top: 1px solid var(--border-hairline);
+    }
+
+    .case-btn-more {
+      color: var(--accent-cyan);
+      transition: gap 0.2s ease;
+    }
+
+    .case-card:hover .case-btn-more {
+      gap: 10px;
+    }
+
+    /* Модалка кейса */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 4, 6, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-dialog {
+      background: var(--bg-modal);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 860px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.85), 0 0 40px rgba(0, 245, 255, 0.1);
+      position: relative;
+      transform: translateY(20px) scale(0.97);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .modal-overlay.open .modal-dialog {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .modal-close-btn:hover {
+      background: rgba(15, 23, 42, 0.95);
+      transform: rotate(90deg);
+    }
+
+    .flow-node {
+      background: var(--bg-modal-node);
+      border: 1px solid var(--border-subtle);
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-heading);
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .flow-node.active-node {
+      border-color: var(--accent-cyan);
+      background: var(--accent-cyan-dim);
+      color: var(--accent-cyan);
+    }
+
+    .flow-arrow {
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .result-box {
+      background: var(--bg-modal-result);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+    }
+
+    .result-val {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--accent-lime);
+      margin-bottom: 4px;
+    }
+
+    .result-lbl {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-secondary);
+      line-height: 1.35;
+    }
+
+    /* Прайс-лист */
+    .pricing-main-tabs {
+      background: var(--bg-pill);
+      border: 1px solid var(--border-subtle);
+      border-radius: 999px;
+      padding: 5px;
+      margin: 32px auto 44px auto;
+      max-width: 680px;
+      width: 100%;
+    }
+
+    .pricing-main-tab-btn {
+      flex: 1;
+      padding: 11px 20px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 999px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.22s ease;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .pricing-main-tab-btn.active {
+      background: var(--btn-primary-bg);
+      color: var(--btn-primary-text);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
+    }
+
+    .pricing-view-panel {
+      display: none;
+    }
+
+    .pricing-view-panel.active {
+      display: block;
+    }
+
+    .package-card.popular {
+      border-color: rgba(0, 245, 255, 0.6);
+      background: var(--bg-popular-card);
+      box-shadow: 0 0 35px rgba(0, 245, 255, 0.08);
+    }
+
+    html.light .package-card.popular {
+      border-color: rgba(2, 132, 199, 0.6);
+      box-shadow: 0 14px 35px rgba(2, 132, 199, 0.12);
+    }
+
+    .service-nav-btn {
+      padding: 9px 16px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--bg-pill);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .service-nav-btn:hover {
+      border-color: var(--border-focus);
+      color: var(--text-heading);
+    }
+
+    .service-nav-btn.active {
+      background: var(--accent-cyan-dim);
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+
+    .catalog-item-card {
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      cursor: pointer;
+      user-select: none;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .catalog-item-card.selected {
+      border-color: var(--accent-lime);
+      background: rgba(204, 255, 0, 0.04);
+    }
+
+    html.light .catalog-item-card.selected {
+      background: rgba(77, 124, 15, 0.06);
+    }
+
+    .catalog-item-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .catalog-custom-checkbox {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      border: 1.5px solid var(--border-focus);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-price-box);
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+      font-size: 11px;
+      font-weight: 800;
+      color: transparent;
+    }
+
+    .catalog-item-card.selected .catalog-custom-checkbox {
+      background: #CCFF00;
+      border-color: #CCFF00;
+      color: #000000;
+    }
+
+    .catalog-item-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-heading);
+      line-height: 1.35;
+    }
+
+    .catalog-item-price-block {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .catalog-item-price {
+      font-family: var(--font-mono);
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      white-space: nowrap;
+    }
+
+    .catalog-item-card.selected .catalog-item-price {
+      color: var(--accent-lime);
+    }
+
+    .catalog-item-period {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    /* Форма и чекбоксы */
+    .form-input, .form-textarea {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 13px 16px;
+      font-size: 14.5px;
+      color: var(--text-heading);
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .form-input:focus, .form-textarea:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 12px rgba(0, 245, 255, 0.25);
+    }
+
+    .checkbox-chip input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      background: var(--bg-chip);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+    }
+
+    .checkbox-chip input:checked + .checkbox-label {
+      background: var(--accent-cyan-dim);
+      border-color: var(--accent-cyan);
+      color: var(--text-heading);
+    }
+
+    .checkbox-indicator {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .checkbox-chip input:checked + .checkbox-label .checkbox-indicator {
+      background: var(--accent-cyan);
+      border-color: var(--accent-cyan);
+      color: #000000;
+    }
+
+    .form-submit-feedback {
+      margin-top: 16px;
+      padding: 14px 18px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      display: none;
+    }
+
+    .form-submit-feedback.success {
+      display: block;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid #10B981;
+      color: #10B981;
+    }
+
+    .form-submit-feedback.error {
+      display: block;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid #EF4444;
+      color: #EF4444;
+    }
+
+    .copy-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #181822;
+      border: 1px solid #CCFF00;
+      color: #CCFF00;
+      padding: 12px 20px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      z-index: 10000;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: all 0.25s ease;
+      pointer-events: none;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .copy-toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Мобильное меню */
+    .mobile-drawer {
+      position: fixed;
+      top: var(--header-height);
+      left: 0;
+      width: 100%;
+      background: var(--bg-drawer);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 24px;
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+      z-index: 99;
+    }
+
+    .mobile-drawer.open {
+      display: flex;
+    }
+
+    .mobile-drawer a {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: var(--text-primary);
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border-hairline);
+    }
+
+    @media (max-width: 768px) {
+      :root {
+        --header-height: 64px;
+      }
+      .hero-title {
+        font-size: clamp(1.75rem, 6.5vw, 2.5rem);
+        hyphens: auto;
+      }
+      .pricing-main-tabs {
+        flex-direction: column;
+        border-radius: 16px;
+        padding: 6px;
+        gap: 6px;
+      }
+      .pricing-main-tab-btn {
+        width: 100%;
+        border-radius: 10px !important;
+        text-align: center;
+        padding: 10px 14px;
+        font-size: 12.5px;
+        white-space: normal;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen overflow-x-hidden relative antialiased">
+  <div class="noise-bg" aria-hidden="true"></div>
+  <div class="tech-grid" aria-hidden="true"></div>
+  <div class="ambient-glow glow-cyan" aria-hidden="true"></div>
+  <div class="ambient-glow glow-lime" aria-hidden="true"></div>
+
+  <!-- ШАПКА САЙТА (HEADER) -->
+  <header class="site-header fixed top-0 left-0 w-full z-[100]" id="site-header">
+    <div class="container-main flex items-center justify-between h-full gap-4">
+      <a href="#" class="brand-logo flex items-center gap-2 font-display text-[17px] font-extrabold tracking-[-0.01em] whitespace-nowrap shrink-0" style="color: var(--text-primary);" aria-label="Lunar-Vision Главная">
+        <span class="inline-flex items-center justify-center w-[22px] h-[22px] shrink-0" style="color: var(--accent-cyan);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            <circle cx="12" cy="12" r="1.5" fill="currentColor"></circle>
+          </svg>
+        </span>
+        LUNAR<span class="whitespace-nowrap" style="color: var(--accent-cyan);">-VISION</span>
+      </a>
+
+      <nav class="hidden md:block" aria-label="Основная навигация">
+        <ul class="nav-links flex items-center gap-5 lg:gap-6 list-none whitespace-nowrap">
+          <li><a href="#about" class="nav-link font-mono text-[12.5px] font-medium inline-block">[01&nbsp;//&nbsp;О&nbsp;НАС]</a></li>
+          <li><a href="#projects" class="nav-link font-mono text-[12.5px] font-medium inline-block">[02&nbsp;//&nbsp;ПРОЕКТЫ]</a></li>
+          <li><a href="#pricing" class="nav-link font-mono text-[12.5px] font-medium inline-block">[03&nbsp;//&nbsp;ПРАЙС]</a></li>
+          <li><a href="#contact" class="nav-link font-mono text-[12.5px] font-medium inline-block">[04&nbsp;//&nbsp;КОНТАКТЫ]</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions flex items-center gap-3 shrink-0">
+        <div class="status-badge hidden xl:inline-flex items-center gap-2 font-mono text-[11px] font-semibold px-3 py-1.5 rounded-full whitespace-nowrap">
+          <span class="status-pulse"></span>
+          СВОБОДЕН 1 СЛОТ НА РАЗРАБОТКУ
+        </div>
+
+        <button
+          type="button"
+          data-theme-toggle
+          aria-label="Переключить тему оформления"
+          aria-pressed="false"
+          class="theme-toggle-btn"
+        >
+          <span data-theme-icon></span>
+        </button>
+
+        <a href="#contact" class="btn btn-primary header-cta-btn hidden md:inline-flex" style="padding: 9px 18px; font-size: 13px;">
+          ОБСУДИТЬ ПРОЕКТ
+        </a>
+
+        <button
+          type="button"
+          class="mobile-menu-btn md:hidden bg-transparent border-0 p-2 cursor-pointer"
+          style="color: var(--text-primary);"
+          id="mobile-toggle"
+          aria-label="Открыть меню"
+          aria-expanded="false"
+          aria-controls="mobile-drawer"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Мобильное меню -->
+  <nav class="mobile-drawer" id="mobile-drawer" aria-label="Мобильная навигация">
+    <a href="#about" class="mobile-nav-link">[01&nbsp;//&nbsp;О&nbsp;НАС]</a>
+    <a href="#projects" class="mobile-nav-link">[02&nbsp;//&nbsp;ПРОЕКТЫ]</a>
+    <a href="#pricing" class="mobile-nav-link">[03&nbsp;//&nbsp;ПРАЙС]</a>
+    <a href="#contact" class="mobile-nav-link">[04&nbsp;//&nbsp;КОНТАКТЫ]</a>
+    <a href="valerii.html" class="mobile-nav-link">Портфолио: Valerii Prokhorov →</a>
+    <a href="andrian.html" class="mobile-nav-link">Портфолио: Andrian Tokar →</a>
+    <a href="#contact" class="btn btn-primary w-full mt-2">ОБСУДИТЬ ПРОЕКТ</a>
+  </nav>
+
+  <main>
+    <!-- HERO-СЕКЦИЯ -->
+    <section class="hero-section flex items-center relative" id="hero">
+      <div class="container-main grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-10 lg:gap-12 items-center">
+        <div>
+          <div class="hero-badge inline-flex items-center gap-2 font-mono text-[11.5px] font-semibold px-3.5 py-1.5 rounded mb-[22px] tracking-[0.04em]">
+            <span>[00]</span> ДВА ИНЖЕНЕРА. ПОЛНЫЙ ЦИКЛ БЕЗ ПОСРЕДНИКОВ
+          </div>
+
+          <h1 class="hero-title mb-5">
+            Создаем высокоскоростные <span class="highlight-cyan">сайты</span>, AI-ботов и надежную инфраструктуру
+          </h1>
+
+          <p class="hero-subtitle text-[15px] md:text-[16.5px] leading-[1.65] mb-[34px] max-w-[580px]" style="color: var(--text-secondary);">
+            Lunar-Vision — инженерный тандем Valerii Prokhorov и Andrian Tokar. Проектируем базы данных, пишем быстрый бэкенд на FastAPI, создаем умных Telegram/Discord ботов, деплоим на Docker и привлекаем клиентов через SEO и Google Ads.
+          </p>
+
+          <div class="hero-cta-group flex items-center gap-4 mb-11 flex-wrap">
+            <div class="magnetic-wrap" id="magnetic-btn-wrap">
+              <a href="#contact" class="btn btn-primary" id="hero-main-cta">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+                ЗАПУСТИТЬ ПРОЕКТ
+              </a>
+            </div>
+            <a href="#pricing" class="btn btn-secondary">
+              СМОТРЕТЬ ПРАЙС
+            </a>
+          </div>
+
+          <div class="hero-metrics grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 pt-[26px]" style="border-top: 1px solid var(--border-hairline);">
+            <div>
+              <div class="font-display text-[21px] font-bold mb-1 whitespace-nowrap" style="color: var(--text-heading);">от 7 дней</div>
+              <div class="font-mono text-[11px] leading-[1.4] uppercase tracking-[0.03em]" style="color: var(--text-muted);">Срок запуска MVP</div>
+            </div>
+            <div>
+              <div class="font-display text-[21px] font-bold mb-1 whitespace-nowrap" style="color: var(--text-heading);">99.98%</div>
+              <div class="font-mono text-[11px] leading-[1.4] uppercase tracking-[0.03em]" style="color: var(--text-muted);">Аптайм серверов</div>
+            </div>
+            <div>
+              <div class="font-display text-[21px] font-bold mb-1 whitespace-nowrap" style="color: var(--text-heading);">100% Прямой</div>
+              <div class="font-mono text-[11px] leading-[1.4] uppercase tracking-[0.03em]" style="color: var(--text-muted);">Контакт с инженерами</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3D-КАРТОЧКА ТЕРМИНАЛА В HERO -->
+        <div class="hero-terminal-container flex justify-start lg:justify-center">
+          <div class="terminal-card spotlight-card w-full max-w-[500px] overflow-hidden relative" id="terminal-3d">
+            <div class="bg-[#14141A] px-4 py-3 flex items-center justify-between border-b border-white/[0.06]">
+              <div class="flex gap-[7px]">
+                <span class="w-2.5 h-2.5 rounded-full bg-[#FF5F56]"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-[#27C93F]"></span>
+              </div>
+              <div class="font-mono text-[12px] text-[#A1A1AA] font-medium">lunar-vision-core.sys [v3.4]</div>
+              <div class="font-mono text-[10px] text-[#CCFF00] bg-[#CCFF00]/10 px-[7px] py-[2px] rounded-[3px] font-semibold">NODES: 2 ONLINE</div>
+            </div>
+
+            <div class="terminal-body px-5 py-[18px] font-mono text-[12px] leading-[1.68] text-[#D4D4D8]" id="terminal-stream">
+              <div class="mb-2 flex gap-2 items-start break-words">
+                <span class="text-[#71717A] shrink-0">[08:14:02]</span>
+                <span class="font-semibold shrink-0 text-[#00F5FF]">[VALERII]</span>
+                <span>Frontend &amp; Growth Engine: Astro SSR, PageSpeed 99, SEO OK</span>
+              </div>
+              <div class="mb-2 flex gap-2 items-start break-words">
+                <span class="text-[#71717A] shrink-0">[08:14:05]</span>
+                <span class="font-semibold shrink-0 text-[#10B981]">[ANDRIAN]</span>
+                <span>Backend &amp; DevOps Engine: FastAPI + Redis, Docker, Ubuntu OK</span>
+              </div>
+              <div class="mb-2 flex gap-2 items-start break-words">
+                <span class="text-[#71717A] shrink-0">[08:14:12]</span>
+                <span class="font-semibold shrink-0 text-[#00F5FF]">[ASTRO SSR]</span>
+                <span>Production pipeline built in 8.4s. Zero runtime hydration bloat</span>
+              </div>
+              <div class="mb-2 flex gap-2 items-start break-words">
+                <span class="text-[#71717A] shrink-0">[08:14:19]</span>
+                <span class="font-semibold shrink-0 text-[#10B981]">[DOCKER]</span>
+                <span>4 containers active: fastapi-core, redis-cache, nginx, tg-bot</span>
+              </div>
+              <div class="mb-2 flex gap-2 items-start break-words">
+                <span class="text-[#71717A] shrink-0">[08:14:26]</span>
+                <span class="font-semibold shrink-0 text-[#A78BFA]">[TELEGRAM]</span>
+                <span>Webhook online @lunar_core_bot (ping: 16ms, SSL: Cloudflare)</span>
+              </div>
+              <div class="mb-2 flex gap-2 items-start break-words">
+                <span class="text-[#71717A] shrink-0">[08:14:34]</span>
+                <span class="font-semibold shrink-0 text-[#F59E0B]">[FASTAPI]</span>
+                <span>Async worker pool: 0.04s response time, Redis healthy</span>
+              </div>
+              <div class="mb-2 flex gap-2 items-start break-words">
+                <span class="text-[#71717A] shrink-0">[08:14:42]</span>
+                <span class="font-semibold shrink-0 text-[#CCFF00]">[GOOGLE ADS]</span>
+                <span>Conversion tracking active (GTM-LV, CVR: +34.8%, ROAS: +185%)</span>
+              </div>
+              <div class="mb-2 flex gap-2 items-start break-words">
+                <span class="text-[#71717A] shrink-0">[08:14:51]</span>
+                <span class="font-semibold shrink-0 text-[#10B981]">[INFRA]</span>
+                <span>Ubuntu LTS / Nginx / Cloudflare WAF: 0 drops, uptime 99.98%</span>
+              </div>
+              <div class="mb-2 flex gap-2 items-start break-words">
+                <span class="text-[#71717A] shrink-0" id="term-live-ts">[08:15:00]</span>
+                <span class="font-semibold shrink-0 text-[#A78BFA]">[STATUS]</span>
+                <span>Ожидание ввода клиента... <span class="term-cursor"></span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- СЕКЦИЯ [01 // О КОМПАНИИ]: ДВА ОСНОВАТЕЛЯ -->
+    <section class="section-spacing" id="about">
+      <div class="container-main">
+        <div class="section-kicker">
+          <span class="kicker-dot"></span>
+          [01 // О КОМПАНИИ]
+        </div>
+        <h2 class="section-title">
+          Два senior-инженера. Без раздутого штата и джуниоров.
+        </h2>
+        <p class="section-desc">
+          В студии Lunar-Vision вы не оплачиваете зарплаты менеджеров, аккаунтов и секретарей. Мы работаем вдвоем и ведем проект от первого эскиза архитектуры до боевого развертывания на серверах и запуска рекламного трафика.
+        </p>
+
+        <div class="founders-grid grid grid-cols-1 md:grid-cols-2 gap-8 mt-11">
+          <!-- Карточка 1: Valerii Prokhorov -->
+          <article class="founder-card spotlight-card p-8 flex flex-col justify-between h-full">
+            <div class="card-content flex flex-col h-full justify-between">
+              <div>
+                <div class="flex gap-[22px] mb-[22px] items-start">
+                  <div class="w-[105px] h-[105px] rounded-lg overflow-hidden shrink-0 border" style="background: #18181E; border-color: var(--border-subtle);">
+                    <!-- REPLACE_IMAGE: Фото Valerii Prokhorov -->
+                    <svg class="w-full h-full object-cover" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect width="120" height="120" fill="#14141C"/>
+                      <circle cx="60" cy="45" r="22" fill="#242432" stroke="#CCFF00" stroke-width="1.5"/>
+                      <path d="M25 105C25 85 40 74 60 74C80 74 95 85 95 105" fill="#1B1B26" stroke="#27272A" stroke-width="1.5"/>
+                      <circle cx="60" cy="45" r="10" stroke="#CCFF00" stroke-width="1.5" stroke-dasharray="2 2"/>
+                      <text x="60" y="112" font-family="'JetBrains Mono', monospace" font-size="7" fill="#71717A" text-anchor="middle">[ФОТО: VALERII PROKHOROV]</text>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 class="font-display text-[20px] font-bold mb-1" style="color: var(--text-heading);">Valerii Prokhorov</h3>
+                    <span class="font-mono text-[13px] font-semibold mb-2.5 block" style="color: var(--accent-lime);">
+                      Сооснователь // Frontend-архитектор &amp; SEO / Growth
+                    </span>
+                    <div class="inline-block font-mono text-[11px] pl-2 border-l-2" style="color: var(--text-muted); border-color: var(--accent-cyan);">
+                      Lead Frontend &amp; Growth Specialist
+                    </div>
+                  </div>
+                </div>
+
+                <p class="text-[14.5px] leading-[1.6] mb-[22px]" style="color: var(--text-secondary);">
+                  Отвечает за визуальную часть, сверхбыструю верстку, анимации, техническую оптимизацию (PageSpeed 90+) и привлечение трафика из Google.
+                </p>
+
+                <div class="font-mono text-[11px] uppercase tracking-[0.04em] mb-2.5" style="color: var(--text-muted);">Ключевой стек технологий:</div>
+                <div class="flex flex-wrap gap-1.5 mb-[26px]">
+                  <span class="tech-tag">HTML5</span>
+                  <span class="tech-tag">CSS3</span>
+                  <span class="tech-tag">Astro</span>
+                  <span class="tech-tag">JavaScript</span>
+                  <span class="tech-tag">Node.js</span>
+                  <span class="tech-tag">Technical SEO</span>
+                  <span class="tech-tag">Google Ads &amp; Business</span>
+                </div>
+              </div>
+
+              <a href="valerii.html" class="founder-btn-link inline-flex items-center gap-2 font-mono text-[13px] font-semibold pt-[18px] w-full">
+                ОТКРЫТЬ ПОРТФОЛИО И КЕЙСЫ →
+              </a>
+            </div>
+          </article>
+
+          <!-- Карточка 2: Andrian Tokar -->
+          <article class="founder-card spotlight-card p-8 flex flex-col justify-between h-full">
+            <div class="card-content flex flex-col h-full justify-between">
+              <div>
+                <div class="flex gap-[22px] mb-[22px] items-start">
+                  <div class="w-[105px] h-[105px] rounded-lg overflow-hidden shrink-0 border" style="background: #18181E; border-color: var(--border-subtle);">
+                    <!-- REPLACE_IMAGE: Фото Andrian Tokar -->
+                    <svg class="w-full h-full object-cover" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect width="120" height="120" fill="#14141C"/>
+                      <circle cx="60" cy="45" r="22" fill="#242432" stroke="#00F5FF" stroke-width="1.5"/>
+                      <path d="M25 105C25 85 40 74 60 74C80 74 95 85 95 105" fill="#1B1B26" stroke="#27272A" stroke-width="1.5"/>
+                      <path d="M52 42L57 47L68 36" stroke="#00F5FF" stroke-width="2" stroke-linecap="round"/>
+                      <text x="60" y="112" font-family="'JetBrains Mono', monospace" font-size="7" fill="#71717A" text-anchor="middle">[ФОТО: ANDRIAN TOKAR]</text>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 class="font-display text-[20px] font-bold mb-1" style="color: var(--text-heading);">Andrian Tokar</h3>
+                    <span class="font-mono text-[13px] font-semibold mb-2.5 block" style="color: var(--accent-cyan);">
+                      Сооснователь // Backend-разработчик, Боты &amp; DevOps
+                    </span>
+                    <div class="inline-block font-mono text-[11px] pl-2 border-l-2" style="color: var(--text-muted); border-color: var(--accent-cyan);">
+                      Lead Systems &amp; DevOps Architect
+                    </div>
+                  </div>
+                </div>
+
+                <p class="text-[14.5px] leading-[1.6] mb-[22px]" style="color: var(--text-secondary);">
+                  Проектирует серверную логику, высоконагруженные API, базы данных, отказоустойчивых Telegram/Discord-ботов и боевую серверную инфраструктуру с CI/CD и защитой.
+                </p>
+
+                <div class="font-mono text-[11px] uppercase tracking-[0.04em] mb-2.5" style="color: var(--text-muted);">Ключевой стек технологий:</div>
+                <div class="flex flex-wrap gap-1.5 mb-[26px]">
+                  <span class="tech-tag">Python</span>
+                  <span class="tech-tag">FastAPI</span>
+                  <span class="tech-tag">Java</span>
+                  <span class="tech-tag">Docker</span>
+                  <span class="tech-tag">Ubuntu</span>
+                  <span class="tech-tag">Nginx</span>
+                  <span class="tech-tag">Redis</span>
+                  <span class="tech-tag">Cloudflare</span>
+                  <span class="tech-tag">Git</span>
+                  <span class="tech-tag">Telegram/Discord Bots</span>
+                </div>
+              </div>
+
+              <a href="andrian.html" class="founder-btn-link inline-flex items-center gap-2 font-mono text-[13px] font-semibold pt-[18px] w-full">
+                ОТКРЫТЬ ПОРТФОЛИО И КЕЙСЫ →
+              </a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- СЕКЦИЯ [02 // НАШИ РАБОТЫ (КЕЙСЫ)] -->
+    <section class="section-spacing" id="projects" style="background: var(--bg-section-projects);">
+      <div class="container-main">
+        <div class="section-kicker">
+          <span class="kicker-dot"></span>
+          [02 // НАШИ РАБОТЫ (КЕЙСЫ)]
+        </div>
+        <h2 class="section-title">
+          Реализованные проекты и инженерные решения
+        </h2>
+        <p class="section-desc">
+          Каждый проект — это слаженная работа фронтенда, надежной базы данных и автоматизированных цепочек оповещений в Telegram. Нажмите на кейс, чтобы изучить архитектуру.
+        </p>
+
+        <!-- Фильтры категорий -->
+        <div class="flex items-center gap-2 mt-8 mb-[38px] flex-wrap" role="tablist">
+          <button type="button" class="filter-tab active" data-filter="all">Все работы (6)</button>
+          <button type="button" class="filter-tab" data-filter="websites">Веб-сайты (3)</button>
+          <button type="button" class="filter-tab" data-filter="bots">Чат-боты и AI (2)</button>
+          <button type="button" class="filter-tab" data-filter="infra">Инфраструктура и SEO (1)</button>
+        </div>
+
+        <!-- Сетка карточек проектов -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="cases-container"></div>
+      </div>
+    </section>
+
+    <!-- СЕКЦИЯ [03 // ПРАЙС-ЛИСТ И ПАКЕТЫ] -->
+    <section class="section-spacing" id="pricing">
+      <div class="container-main">
+        <div class="section-kicker">
+          <span class="kicker-dot"></span>
+          [03 // ПРАЙС-ЛИСТ]
+        </div>
+        <h2 class="section-title">
+          Форматы работы и прозрачный прайс
+        </h2>
+        <p class="section-desc">
+          Работаем по модели ежемесячного технического партнерства или рассчитываем индивидуальную смету под разовый запуск проекта.
+        </p>
+
+        <!-- Главный переключатель из 2 вкладок (ВКЛАДКА 1 АКТИВНА ПО УМОЛЧАНИЮ) -->
+        <div class="pricing-main-tabs flex items-center" role="tablist">
+          <button type="button" class="pricing-main-tab-btn active" id="tab-btn-subscription" data-target="panel-subscription">
+            Ежемесячная подписка (Поддержка и рост)
+          </button>
+          <button type="button" class="pricing-main-tab-btn" id="tab-btn-onetime" data-target="panel-onetime">
+            Разовая разработка (Сборка сметы из прайса)
+          </button>
+        </div>
+
+        <!-- ПАНЕЛЬ 1: ЕЖЕМЕСЯЧНАЯ ПОДПИСКА -->
+        <div class="pricing-view-panel active" id="panel-subscription">
+          <div class="packages-grid grid grid-cols-1 lg:grid-cols-3 gap-6 mb-9">
+            <!-- Тариф 1: Старт -->
+            <article class="package-card spotlight-card p-8 flex flex-col justify-between h-full relative">
+              <div class="card-content flex flex-col h-full justify-between">
+                <div>
+                  <div class="font-display text-[22px] font-extrabold mb-1" style="color: var(--text-heading);">Тариф «Старт»</div>
+                  <div class="text-[11px] mt-1" style="color: var(--text-muted);">Базовая техподдержка, хостинг и мониторинг</div>
+
+                  <div class="p-5 rounded-lg my-5 border" style="background: var(--bg-price-box); border-color: var(--border-hairline);">
+                    <div class="font-mono text-[11px] uppercase tracking-[0.04em] font-semibold mb-1" style="color: var(--accent-lime);">Ежемесячное партнерство</div>
+                    <div class="font-display text-[28px] font-extrabold mb-2 tracking-[-0.01em]" style="color: var(--text-heading);">
+                      160 € <span class="text-[16px] font-medium" style="color: var(--text-muted);">/ мес</span>
+                    </div>
+                    <div class="font-mono text-[11.5px] pt-2 leading-[1.45] border-t border-dashed" style="color: var(--text-secondary); border-color: var(--border-subtle);">
+                      Если разработка сайта с нуля: <span class="font-semibold" style="color: var(--accent-cyan);">750 € – 1 400 €</span> разово
+                    </div>
+                    <div class="text-[11px] mt-1" style="color: var(--text-muted);">Можно подключить как на ваш готовый проект, так и после запуска с нуля</div>
+                  </div>
+
+                  <div class="font-mono text-[11.5px] font-bold uppercase tracking-[0.04em] mb-3.5" style="color: var(--accent-cyan);">Что входит ежемесячно:</div>
+                  <ul class="list-none mb-7 space-y-3">
+                    <li class="text-[13px] flex items-start gap-2.5 leading-[1.45]" style="color: var(--text-body-strong);">
+                      <span class="shrink-0 mt-0.5 font-extrabold" style="color: var(--accent-lime);">✓</span>
+                      <span>Надежный хостинг на настроенном VPS</span>
+                    </li>
+                    <li class="text-[13px] flex items-start gap-2.5 leading-[1.45]" style="color: var(--text-body-strong);">
+                      <span class="shrink-0 mt-0.5 font-extrabold" style="color: var(--accent-lime);">✓</span>
+                      <span>Круглосуточный мониторинг доступности 24/7</span>
+                    </li>
+                    <li class="text-[13px] flex items-start gap-2.5 leading-[1.45]" style="color: var(--text-body-strong);">
+                      <span class="shrink-0 mt-0.5 font-extrabold" style="color: var(--accent-lime);">✓</span>
+                      <span>Регулярные бэкапы и автообновление SSL-сертификатов</span>
+                    </li>
+                    <li class="text-[13px] flex items-start gap-2.5 leading-[1.45]" style="color: var(--text-body-strong);">
+                      <span class="shrink-0 mt-0.5 font-extrabold" style="color: var(--accent-lime);">✓</span>
+                      <span>До 2–3 часов работы разработчика в месяц (правки текста, фото, мелкие доработки)</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <button type="button" class="btn btn-secondary w-full" onclick="selectServiceForContact('Тариф «Старт» (Подписка 160 € / мес)')">
+                  Подключить тариф «Старт»
+                </button>
+              </div>
+            </article>
+
+            <!-- Тариф 2: Бизнес (ХИТ / РЕКОМЕНДУЕМ) -->
+            <article class="package-card spotlight-card popular p-8 flex flex-col justify-between h-full relative">
+              <span class="absolute top-4 right-[18px] font-mono text-[10.5px] font-bold text-black px-[11px] py-1 rounded-full uppercase tracking-[0.05em]" style="background: #00F5FF;">
+                ХИТ / РЕКОМЕНДУЕМ
+              </span>
+              <div class="card-content flex flex-col h-full justify-between">
+                <div>
+                  <div class="font-display text-[22px] font-extrabold mb-1" style="color: var(--text-heading);">Тариф «Бизнес»</div>
+                  <div class="text-[11px] mt-1" style="color: var(--text-muted);">Комплексное ведение сайта, базы данных и бота</div>
+
+                  <div class="p-5 rounded-lg my-5 border" style="background: var(--bg-popular-price); border-color: rgba(0, 245, 255, 0.25);">
+                    <div class="font-mono text-[11px] uppercase tracking-[0.04em] font-semibold mb-1" style="color: var(--accent-cyan);">Ежемесячное партнерство</div>
+                    <div class="font-display text-[28px] font-extrabold mb-2 tracking-[-0.01em]" style="color: var(--accent-cyan);">
+                      340 € <span class="text-[16px] font-medium" style="color: var(--text-muted);">/ мес</span>
+                    </div>
+                    <div class="font-mono text-[11.5px] pt-2 leading-[1.45] border-t border-dashed" style="color: var(--text-secondary); border-color: var(--border-subtle);">
+                      Если разработка и автоматизация с нуля: <span class="font-semibold" style="color: var(--accent-cyan);">1 600 € – 3 400 €</span> разово
+                    </div>
+                    <div class="text-[11px] mt-1" style="color: var(--text-muted);">Можно подключить как на ваш готовый проект, так и после запуска с нуля</div>
+                  </div>
+
+                  <div class="font-mono text-[11.5px] font-bold uppercase tracking-[0.04em] mb-3.5" style="color: var(--accent-cyan);">Что входит ежемесячно:</div>
+                  <ul class="list-none mb-7 space-y-3">
+                    <li class="text-[13px] flex items-start gap-2.5 leading-[1.45]" style="color: var(--text-body-strong);">
+                      <span class="shrink-0 mt-0.5 font-extrabold" style="color: var(--accent-lime);">✓</span>
+                      <span>Хостинг сайта, базы данных и Telegram-бота</span>
+                    </li>
+                    <li class="text-[13px] flex items-start gap-2.5 leading-[1.45]" style="color: var(--text-body-strong);">
+                      <span class="shrink-0 mt-0.5 font-extrabold" style="color: var(--accent-lime);">✓</span>
+                      <span>Мониторинг БД, логов и ежедневные резервные копии</span>
+                    </li>
+                    <li class="text-[13px] flex items-start gap-2.5 leading-[1.45]" style="color: var(--text-body-strong);">
+                      <span class="shrink-0 mt-0.5 font-extrabold" style="color: var(--accent-lime);">✓</span>
+                      <span>До 5–6 часов работы команды в месяц (новые блоки, обновление логики бота)</span>
+                    </li>
+                    <li class="text-[13px] flex items-start gap-2.5 leading-[1.45]" style="color: var(--text-body-strong);">
+                      <span class="shrink-0 mt-0.5 font-extrabold" style="color: var(--accent-lime);">✓</span>
+                      <span>Регулярное ведение и обновление Google Business Profile</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <button type="button" class="btn btn-primary w-full" onclick="selectServiceForContact('Тариф «Бизнес» (Подписка 340 € / мес)')">
+                  Подключить тариф «Бизнес»
+                </button>
+              </div>
+            </article>
+
+            <!-- Тариф 3: PRO -->
+            <article class="package-card spotlight-card p-8 flex flex-col justify-between h-full relative">
+              <div class="card-content flex flex-col h-full justify-between">
+                <div>
+                  <div class="font-display text-[22px] font-extrabold mb-1" style="color: var(--text-heading);">Тариф «PRO»</div>
+                  <div class="text-[11px] mt-1" style="color: var(--text-muted);">Выделенный сервер, регулярная разработка и Google Ads</div>
+
+                  <div class="p-5 rounded-lg my-5 border" style="background: var(--bg-price-box); border-color: var(--border-hairline);">
+                    <div class="font-mono text-[11px] uppercase tracking-[0.04em] font-semibold mb-1" style="color: var(--accent-lime);">VIP-сопровождение</div>
+                    <div class="font-display text-[28px] font-extrabold mb-2 tracking-[-0.01em]" style="color: var(--text-heading);">
+                      720 € <span class="text-[16px] font-medium" style="color: var(--text-muted);">/ мес</span>
+                    </div>
+                    <div class="font-mono text-[11.5px] pt-2 leading-[1.45] border-t border-dashed" style="color: var(--text-secondary); border-color: var(--border-subtle);">
+                      Если сложная архитектура и реклама с нуля: <span class="font-semibold" style="color: var(--accent-cyan);">3 600 € – 6 800 €</span> разово
+                    </div>
+                    <div class="text-[11px] mt-1" style="color: var(--text-muted);">Можно подключить как на ваш готовый проект, так и после запуска с нуля</div>
+                  </div>
+
+                  <div class="font-mono text-[11.5px] font-bold uppercase tracking-[0.04em] mb-3.5" style="color: var(--accent-cyan);">Что входит ежемесячно:</div>
+                  <ul class="list-none mb-7 space-y-3">
+                    <li class="text-[13px] flex items-start gap-2.5 leading-[1.45]" style="color: var(--text-body-strong);">
+                      <span class="shrink-0 mt-0.5 font-extrabold" style="color: var(--accent-lime);">✓</span>
+                      <span>Выделенный производительный сервер и приоритетная защита Cloudflare</span>
+                    </li>
+                    <li class="text-[13px] flex items-start gap-2.5 leading-[1.45]" style="color: var(--text-body-strong);">
+                      <span class="shrink-0 mt-0.5 font-extrabold" style="color: var(--accent-lime);">✓</span>
+                      <span>Приоритетная поддержка и до 10–12 часов разработки новых фич</span>
+                    </li>
+                    <li class="text-[13px] flex items-start gap-2.5 leading-[1.45]" style="color: var(--text-body-strong);">
+                      <span class="shrink-0 mt-0.5 font-extrabold" style="color: var(--accent-lime);">✓</span>
+                      <span>Полное ведение рекламы Google Ads (чистка запросов, ставки, сплит-тесты)</span>
+                    </li>
+                    <li class="text-[13px] flex items-start gap-2.5 leading-[1.45]" style="color: var(--text-body-strong);">
+                      <span class="shrink-0 mt-0.5 font-extrabold" style="color: var(--accent-lime);">✓</span>
+                      <span>Ежемесячная аналитика и техническое развитие инфраструктуры</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <button type="button" class="btn btn-secondary w-full" onclick="selectServiceForContact('Тариф «PRO» (Подписка 720 € / мес)')">
+                  Подключить тариф «PRO»
+                </button>
+              </div>
+            </article>
+          </div>
+
+          <!-- Заметная плашка-переход на Вкладку 2 -->
+          <div class="rounded-lg px-6 py-[18px] flex items-center justify-between gap-5 mb-7 flex-wrap border" style="background: var(--btn-secondary-bg); border-color: var(--border-subtle);">
+            <div class="text-[14px]" style="color: var(--text-secondary);">
+              <strong style="color: var(--text-heading);">Нужно сделать проект разово без подписки?</strong> Выберите точечные услуги в интерактивном прайсе и рассчитайте бюджет.
+            </div>
+            <button
+              type="button"
+              class="font-mono text-[13px] font-bold px-4 py-2 rounded-md border cursor-pointer transition-all whitespace-normal sm:whitespace-nowrap text-left sm:text-center max-w-full"
+              style="color: var(--accent-cyan); background: var(--accent-cyan-dim); border-color: rgba(0, 245, 255, 0.3);"
+              id="btn-jump-to-tab2"
+            >
+              Переключиться на интерактивный прайс-лист разовых работ →
+            </button>
+          </div>
+        </div>
+
+        <!-- ПАНЕЛЬ 2: РАЗОВАЯ РАЗРАБОТКА (ИНТЕРАКТИВНЫЙ КАТАЛОГ С КАЛЬКУЛЯТОРОМ И 6 ТАБАМИ) -->
+        <div class="pricing-view-panel" id="panel-onetime">
+          <div class="mb-5">
+            <div class="section-kicker">
+              <span class="kicker-dot"></span>
+              ИНТЕРАКТИВНЫЙ КАЛЬКУЛЯТОР РАЗОВЫХ УСЛУГ
+            </div>
+            <p class="text-[14px]" style="color: var(--text-secondary);">
+              Отмечайте нужные задачи галочкой — калькулятор моментально рассчитает ориентировочную вилку сметы:
+            </p>
+          </div>
+
+          <!-- 6 Внутренних вкладок категорий -->
+          <div class="flex gap-2 overflow-x-auto pb-2.5 mb-5" role="tablist">
+            <button type="button" class="service-nav-btn active" data-tab="tab-frontend">1. Дизайн и Frontend</button>
+            <button type="button" class="service-nav-btn" data-tab="tab-backend">2. Backend и БД</button>
+            <button type="button" class="service-nav-btn" data-tab="tab-bots">3. Чат-боты</button>
+            <button type="button" class="service-nav-btn" data-tab="tab-integrations">4. Интеграции</button>
+            <button type="button" class="service-nav-btn" data-tab="tab-devops">5. Сервер и DevOps</button>
+            <button type="button" class="service-nav-btn" data-tab="tab-seo">6. SEO и Google Ads</button>
+          </div>
+
+          <!-- Сетка элементов текущей вкладки с чекбоксами -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-6" id="catalog-items-wrap"></div>
+
+          <!-- Интерактивная плашка подсчета сметы -->
+          <div class="rounded-[14px] px-7 py-5 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-5 mt-4 border shadow-xl" style="background: var(--bg-calc-bar); border-color: var(--border-subtle);">
+            <div class="font-mono text-[14px] leading-[1.6]" style="color: var(--text-secondary);">
+              Выбрано услуг: <strong id="estimate-count" style="color: var(--text-heading);">0</strong>
+              <span class="mx-2.5 opacity-30">|</span>
+              Ориентировочная вилка:
+              <span class="font-display text-[20px] font-extrabold ml-1.5" style="color: var(--accent-lime);" id="estimate-price">0 €</span>
+            </div>
+            <button type="button" class="btn btn-accent" id="btn-transfer-estimate">
+              ПЕРЕНЕСТИ РАСЧЕТ В ЗАЯВКУ →
+            </button>
+          </div>
+        </div>
+
+        <!-- Компактная строка условий в самом низу прайса -->
+        <div class="mt-9 px-6 py-4 rounded-lg text-center font-mono text-[12.5px] leading-[1.6] border border-dashed" style="background: var(--btn-secondary-bg); border-color: var(--border-subtle); color: var(--text-secondary);">
+          <strong style="color: var(--text-heading);">Условия работы:</strong> 50% предоплата перед стартом / 50% после демонстрации готового решения
+          <span class="mx-2" style="color: var(--accent-cyan);">•</span>
+          <strong style="color: var(--text-heading);">30 календарных дней гарантии</strong> на устранение багов
+        </div>
+      </div>
+    </section>
+
+    <!-- СЕКЦИЯ [04 // КОНТАКТЫ] -->
+    <section class="section-spacing" id="contact" style="background: var(--bg-section-contact);">
+      <div class="container-main">
+        <div class="section-kicker">
+          <span class="kicker-dot"></span>
+          [04 // КОНТАКТЫ]
+        </div>
+        <h2 class="section-title">
+          Обсудить проект напрямую с инженерами
+        </h2>
+        <p class="section-desc">
+          Опишите вашу задачу или выберите готовый тариф. Мы изучим вводные и ответим в Telegram или по Email в течение 2 часов в рабочее время с предварительной оценкой сроков и архитектуры.
+        </p>
+
+        <div class="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-12 items-start mt-11">
+          <!-- Левая колонка: Форма -->
+          <div class="spotlight-card p-6 sm:p-9">
+            <div class="card-content">
+              <form id="lead-form" novalidate>
+                <div class="mb-5">
+                  <label class="block font-mono text-[12px] font-semibold uppercase tracking-[0.03em] mb-2" style="color: var(--text-secondary);" for="client-name">Ваше имя *</label>
+                  <input type="text" id="client-name" class="form-input" placeholder="Александр" required />
+                </div>
+
+                <div class="mb-5">
+                  <label class="block font-mono text-[12px] font-semibold uppercase tracking-[0.03em] mb-2" style="color: var(--text-secondary);" for="client-contact">Telegram или Email *</label>
+                  <input type="text" id="client-contact" class="form-input" placeholder="@username или your@company.com" required />
+                </div>
+
+                <div class="mb-5">
+                  <label class="block font-mono text-[12px] font-semibold uppercase tracking-[0.03em] mb-2" style="color: var(--text-secondary);">Интересующие услуги / задачи *</label>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-1.5">
+                    <div class="checkbox-chip relative">
+                      <input type="checkbox" id="srv-site" name="services" value="Веб-сайт" checked />
+                      <label for="srv-site" class="checkbox-label">
+                        <span class="checkbox-indicator">✓</span>
+                        Веб-сайт / Landing
+                      </label>
+                    </div>
+                    <div class="checkbox-chip relative">
+                      <input type="checkbox" id="srv-bot" name="services" value="Telegram/Discord бот" />
+                      <label for="srv-bot" class="checkbox-label">
+                        <span class="checkbox-indicator">✓</span>
+                        Telegram / Discord Бот
+                      </label>
+                    </div>
+                    <div class="checkbox-chip relative">
+                      <input type="checkbox" id="srv-backend" name="services" value="Backend и БД" />
+                      <label for="srv-backend" class="checkbox-label">
+                        <span class="checkbox-indicator">✓</span>
+                        Backend / Базы данных
+                      </label>
+                    </div>
+                    <div class="checkbox-chip relative">
+                      <input type="checkbox" id="srv-devops" name="services" value="Хостинг и DevOps" />
+                      <label for="srv-devops" class="checkbox-label">
+                        <span class="checkbox-indicator">✓</span>
+                        Хостинг / Docker / SSL
+                      </label>
+                    </div>
+                    <div class="checkbox-chip relative sm:col-span-2">
+                      <input type="checkbox" id="srv-ads" name="services" value="SEO и Google Ads" />
+                      <label for="srv-ads" class="checkbox-label">
+                        <span class="checkbox-indicator">✓</span>
+                        Продвижение: SEO и Google Ads
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-5">
+                  <label class="block font-mono text-[12px] font-semibold uppercase tracking-[0.03em] mb-2" style="color: var(--text-secondary);" for="client-message">Описание проекта или ссылка на ТЗ</label>
+                  <textarea id="client-message" class="form-textarea min-h-[120px] resize-y" placeholder="Расскажите о проекте: цели, сроки, примеры сайтов или ботов, которые нравятся..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-accent w-full py-[15px]">
+                  ОТПРАВИТЬ ЗАЯВКУ В LUNAR-VISION
+                </button>
+
+                <div class="form-submit-feedback" id="form-feedback" role="status" aria-live="polite"></div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Правая колонка: Прямые кнопки связи -->
+          <div class="flex flex-col gap-[18px]">
+            <div class="spotlight-card p-6 flex items-center justify-between gap-4">
+              <div class="card-content">
+                <h4 class="font-mono text-[11px] uppercase tracking-[0.04em] mb-1" style="color: var(--text-muted);">Связаться в Telegram</h4>
+                <div class="font-mono text-[15px] font-bold" style="color: var(--text-heading);">@lunarvision_core</div>
+              </div>
+              <button
+                type="button"
+                class="relative z-10 px-3.5 py-2 rounded-md font-mono text-[12px] font-semibold cursor-pointer flex items-center gap-1.5 whitespace-nowrap border transition-all"
+                style="background: var(--btn-secondary-bg); border-color: var(--border-subtle); color: var(--accent-cyan);"
+                onclick="copyContact('@lunarvision_core', 'Telegram никнейм')"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                Копировать
+              </button>
+            </div>
+
+            <div class="spotlight-card p-6 flex items-center justify-between gap-4">
+              <div class="card-content">
+                <h4 class="font-mono text-[11px] uppercase tracking-[0.04em] mb-1" style="color: var(--text-muted);">Написать на Email</h4>
+                <div class="font-mono text-[15px] font-bold" style="color: var(--text-heading);">core@lunar-vision.tech</div>
+              </div>
+              <button
+                type="button"
+                class="relative z-10 px-3.5 py-2 rounded-md font-mono text-[12px] font-semibold cursor-pointer flex items-center gap-1.5 whitespace-nowrap border transition-all"
+                style="background: var(--btn-secondary-bg); border-color: var(--border-subtle); color: var(--accent-cyan);"
+                onclick="copyContact('core@lunar-vision.tech', 'Email адрес')"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                Копировать
+              </button>
+            </div>
+
+            <div class="spotlight-card p-6 flex items-center justify-between gap-4">
+              <div class="card-content">
+                <h4 class="font-mono text-[11px] uppercase tracking-[0.04em] mb-1" style="color: var(--text-muted);">Репозитории &amp; Код</h4>
+                <div class="font-mono text-[15px] font-bold" style="color: var(--text-heading);">github.com/lunar-vision</div>
+              </div>
+              <button
+                type="button"
+                class="relative z-10 px-3.5 py-2 rounded-md font-mono text-[12px] font-semibold cursor-pointer flex items-center gap-1.5 whitespace-nowrap border transition-all"
+                style="background: var(--btn-secondary-bg); border-color: var(--border-subtle); color: var(--accent-cyan);"
+                onclick="copyContact('https://github.com/lunar-vision', 'GitHub ссылка')"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                Копировать
+              </button>
+            </div>
+
+            <div class="spotlight-card p-6">
+              <div class="card-content">
+                <div class="flex items-center gap-2.5 mb-2">
+                  <span class="w-2 h-2 rounded-full" style="background: var(--accent-lime); box-shadow: 0 0 10px var(--accent-lime);"></span>
+                  <span class="font-mono text-[12px] font-bold" style="color: var(--text-heading);">Режим работы студии</span>
+                </div>
+                <p class="text-[13.5px] leading-[1.55]" style="color: var(--text-secondary);">
+                  Пн–Сб: 09:00 – 21:00 (CET). Для клиентов на постоянном сопровождении серверный мониторинг и устранение аварий производятся в режиме <strong style="color: var(--text-heading);">24/7/365</strong>.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ФУТЕР -->
+  <footer class="relative z-[2] pt-14 pb-9" style="background: var(--bg-footer); border-top: 1px solid var(--border-hairline);">
+    <div class="container-main">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center flex-wrap gap-6 mb-8">
+        <div class="max-w-[380px]">
+          <a href="#" class="flex items-center gap-2 font-display text-[17px] font-extrabold tracking-[-0.01em] whitespace-nowrap" style="color: var(--text-primary);">
+            <span class="inline-flex items-center justify-center w-5 h-5" style="color: var(--accent-cyan);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                <circle cx="12" cy="12" r="1.5" fill="currentColor"></circle>
+              </svg>
+            </span>
+            LUNAR<span style="color: var(--accent-cyan);">-VISION</span>
+          </a>
+          <p class="text-[13.5px] mt-2" style="color: var(--text-muted);">
+            IT-студия полного цикла. Valerii Prokhorov &amp; Andrian Tokar. Быстрые сайты, Telegram/Discord-боты, архитектура баз данных и серверная инфраструктура.
+          </p>
+        </div>
+
+        <ul class="flex flex-wrap gap-5 sm:gap-7 list-none font-mono text-[12px]" style="color: var(--text-secondary);">
+          <li><a href="#about" class="nav-link">[01&nbsp;//&nbsp;О&nbsp;НАС]</a></li>
+          <li><a href="#projects" class="nav-link">[02&nbsp;//&nbsp;ПРОЕКТЫ]</a></li>
+          <li><a href="#pricing" class="nav-link">[03&nbsp;//&nbsp;ПРАЙС]</a></li>
+          <li><a href="#contact" class="nav-link">[04&nbsp;//&nbsp;КОНТАКТЫ]</a></li>
+        </ul>
+      </div>
+
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pt-6 font-mono text-[11.5px]" style="border-top: 1px solid var(--border-hairline); color: var(--text-muted);">
+        <div>© 2026 Lunar-Vision Engineering. Все права защищены.</div>
+        <div>Two Senior Engineers • Valerii Prokhorov &amp; Andrian Tokar • 100% Production Grade</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ИНТЕРАКТИВНОЕ МОДАЛЬНОЕ ОКНО КЕЙСА -->
+  <div class="modal-overlay" id="case-modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-dialog">
+      <button type="button" class="modal-close-btn" id="modal-close" aria-label="Закрыть модальное окно">✕</button>
+
+      <div class="w-full aspect-[16/8.5] bg-[#16161E] relative border-b flex items-center justify-center" style="border-color: var(--border-subtle);" id="modal-preview"></div>
+
+      <div class="p-6 sm:p-[34px_38px]">
+        <div class="mb-[26px]">
+          <span class="font-mono text-[12px] uppercase tracking-[0.04em] mb-2 block" style="color: var(--accent-cyan);" id="modal-cat">ВЕБ-САЙТЫ</span>
+          <h2 class="font-display text-[22px] sm:text-[25px] font-extrabold leading-[1.22] mb-2" style="color: var(--text-heading);" id="modal-title">Название проекта</h2>
+          <p class="text-[15px]" style="color: var(--text-secondary);" id="modal-subtitle">Краткое резюме</p>
+        </div>
+
+        <div class="mb-[26px] pb-[22px] border-b" style="border-color: var(--border-hairline);">
+          <div class="font-mono text-[12px] font-bold uppercase tracking-[0.05em] mb-3 flex items-center gap-2" style="color: var(--accent-cyan);">
+            <span>[01]</span> Задача клиента
+          </div>
+          <p class="text-[14.5px] leading-[1.65]" style="color: var(--text-body-strong);" id="modal-task"></p>
+        </div>
+
+        <div class="mb-[26px] pb-[22px] border-b" style="border-color: var(--border-hairline);">
+          <div class="font-mono text-[12px] font-bold uppercase tracking-[0.05em] mb-3 flex items-center gap-2" style="color: var(--accent-cyan);">
+            <span>[02]</span> Архитектура и сквозной поток данных
+          </div>
+          <p class="text-[14.5px] leading-[1.65] mb-2" style="color: var(--text-body-strong);">
+            Интерактивная цепочка прохождения запроса:
+          </p>
+          <div class="flex items-center gap-2.5 overflow-x-auto pt-3.5 pb-1.5" id="modal-pipeline"></div>
+        </div>
+
+        <div class="mb-[26px] pb-[22px] border-b" style="border-color: var(--border-hairline);">
+          <div class="font-mono text-[12px] font-bold uppercase tracking-[0.05em] mb-3 flex items-center gap-2" style="color: var(--accent-cyan);">
+            <span>[03]</span> На чем сделано (Стек и инфраструктура)
+          </div>
+          <div class="flex flex-wrap gap-1.5" id="modal-stack"></div>
+        </div>
+
+        <div>
+          <div class="font-mono text-[12px] font-bold uppercase tracking-[0.05em] mb-3 flex items-center gap-2" style="color: var(--accent-cyan);">
+            <span>[04]</span> Итоговый результат
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-3" id="modal-results"></div>
+        </div>
+
+        <div class="mt-8 flex gap-3.5 flex-wrap">
+          <button type="button" class="btn btn-accent" id="modal-cta-btn">
+            ХОЧУ ПОХОЖЕЕ РЕШЕНИЕ →
+          </button>
+          <button type="button" class="btn btn-secondary" onclick="closeModal()">
+            ЗАКРЫТЬ
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="copy-toast" id="copy-toast" role="status" aria-live="polite">Скопировано в буфер обмена</div>
+</body>
+</html>

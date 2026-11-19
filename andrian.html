@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ru" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Andrian Tokar — Сооснователь, Backend-разработчик, Боты &amp; DevOps | Lunar-Vision</title>
+  <meta name="description" content="Портфолио и стек Andrian Tokar. Серверная логика, FastAPI, Java, Docker, Ubuntu, Nginx, Redis, Cloudflare, Telegram & Discord боты." />
+  <meta property="og:title" content="Andrian Tokar — Backend-разработчик, Боты &amp; DevOps | Lunar-Vision" />
+  <meta property="og:description" content="Портфолио и стек Andrian Tokar. Серверная логика, FastAPI, Java, Docker, Ubuntu, Nginx, Redis, Cloudflare, Telegram & Discord боты." />
+  <meta property="og:type" content="website" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Unbounded:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Unbounded', 'sans-serif'],
+            body: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    };
+    (function () {
+      try {
+        var t = localStorage.getItem('lunar-theme');
+        if (t === 'light') {
+          document.documentElement.classList.remove('dark');
+          document.documentElement.classList.add('light');
+        }
+      } catch (e) {}
+    })();
+  </script>
+
+  <!-- GSAP 3 CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="script.js" defer></script>
+
+  <style>
+    :root {
+      --bg-main: #09090B;
+      --bg-card: #121216;
+      --bg-avatar: #181822;
+      --border-subtle: #27272A;
+      --accent-cyan: #00F5FF;
+      --accent-lime: #CCFF00;
+      --text-primary: #F4F4F5;
+      --text-heading: #FFFFFF;
+      --text-secondary: #A1A1AA;
+      --tag-bg: rgba(255, 255, 255, 0.05);
+      --tag-border: rgba(255, 255, 255, 0.1);
+      --grid-line: rgba(255, 255, 255, 0.025);
+      --btn-bg: #F4F4F5;
+      --btn-text: #000000;
+    }
+
+    html.light {
+      --bg-main: #F8FAFC;
+      --bg-card: rgba(255, 255, 255, 0.94);
+      --bg-avatar: #E2E8F0;
+      --border-subtle: #CBD5E1;
+      --accent-cyan: #0284C7;
+      --accent-lime: #4D7C0F;
+      --text-primary: #0F172A;
+      --text-heading: #09090B;
+      --text-secondary: #475569;
+      --tag-bg: rgba(15, 23, 42, 0.04);
+      --tag-border: rgba(15, 23, 42, 0.12);
+      --grid-line: rgba(15, 23, 42, 0.045);
+      --btn-bg: #09090B;
+      --btn-text: #FFFFFF;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    .noise-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
+    .tech-grid {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-size: 48px 48px;
+      background-image:
+        linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+      mask-image: radial-gradient(ellipse at 50% 30%, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.15) 75%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse at 50% 30%, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.15) 75%, transparent 100%);
+    }
+
+    .spotlight-card {
+      position: relative;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      overflow: hidden;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+    }
+
+    .spotlight-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(
+        520px circle at var(--mouse-x, -1000px) var(--mouse-y, -1000px),
+        rgba(0, 245, 255, 0.08),
+        transparent 45%
+      );
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .spotlight-card:hover {
+      border-color: rgba(0, 245, 255, 0.4);
+    }
+
+    html.light .spotlight-card:hover {
+      border-color: rgba(2, 132, 199, 0.45);
+    }
+
+    .spotlight-card:hover::before {
+      opacity: 1;
+    }
+
+    .tag {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      background: var(--tag-bg);
+      border: 1px solid var(--tag-border);
+      padding: 4px 8px;
+      border-radius: 4px;
+      margin: 3px;
+      color: var(--text-secondary);
+    }
+
+    .theme-toggle-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+    }
+
+    .theme-toggle-btn:hover {
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+
+    .cta-btn-cyan {
+      background: var(--btn-bg);
+      color: var(--btn-text);
+    }
+
+    .cta-btn-cyan:hover {
+      background: var(--accent-cyan);
+      color: #000000;
+      box-shadow: 0 0 20px rgba(0, 245, 255, 0.35);
+    }
+  </style>
+</head>
+<body class="font-body leading-relaxed pb-20 min-h-screen antialiased relative overflow-x-hidden">
+  <div class="noise-bg" aria-hidden="true"></div>
+  <div class="tech-grid" aria-hidden="true"></div>
+
+  <div class="relative z-10 max-w-[1000px] mx-auto px-6 py-10">
+    <!-- Верхняя навигация между страницами + переключатель темы -->
+    <nav class="flex flex-wrap items-center justify-between gap-4 mb-9" aria-label="Навигация по портфолио">
+      <a href="index.html" class="inline-flex items-center gap-2 font-mono text-[13px] hover:underline" style="color: var(--accent-cyan);">
+        ← ВЕРНУТЬСЯ НА ГЛАВНУЮ LUNAR-VISION
+      </a>
+
+      <div class="flex items-center gap-3">
+        <a href="valerii.html" class="font-mono text-[12px] px-3 py-1.5 rounded-md border transition-colors hover:underline" style="border-color: var(--border-subtle); color: var(--accent-lime);">
+          Портфолио Valerii Prokhorov →
+        </a>
+        <button
+          type="button"
+          data-theme-toggle
+          aria-label="Переключить тему оформления"
+          aria-pressed="false"
+          class="theme-toggle-btn inline-flex items-center justify-center w-9 h-9 rounded-lg cursor-pointer transition-colors"
+        >
+          <span data-theme-icon></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Карточка основателя -->
+    <section class="profile-hero spotlight-card flex flex-col sm:flex-row gap-8 items-start rounded-2xl p-9 mb-10">
+      <div class="relative z-10 w-[130px] h-[130px] rounded-xl shrink-0 overflow-hidden border" style="background: var(--bg-avatar); border-color: var(--border-subtle);">
+        <!-- REPLACE_IMAGE: Фото Andrian Tokar -->
+        <svg viewBox="0 0 130 130" fill="none" class="w-full h-full">
+          <rect width="130" height="130" fill="#14141C"/>
+          <circle cx="65" cy="50" r="26" fill="#242432" stroke="#00F5FF" stroke-width="1.5"/>
+          <path d="M30 115C30 90 45 80 65 80C85 80 100 90 100 115" fill="#1B1B26" stroke="#27272A" stroke-width="1.5"/>
+          <text x="65" y="122" font-family="'JetBrains Mono', monospace" font-size="8" fill="#71717A" text-anchor="middle">[ФОТО: ANDRIAN TOKAR]</text>
+        </svg>
+      </div>
+
+      <div class="relative z-10">
+        <h1 class="font-display text-[28px] font-bold mb-1.5" style="color: var(--text-heading);">Andrian Tokar</h1>
+        <span class="font-mono text-[14px] block mb-4" style="color: var(--accent-cyan);">
+          Сооснователь // Backend-разработчик, Боты &amp; DevOps
+        </span>
+        <p class="text-[15px] mb-5" style="color: var(--text-secondary);">
+          Проектирует серверную логику, высоконагруженные API, базы данных, отказоустойчивых Telegram/Discord-ботов и боевую серверную инфраструктуру с CI/CD и защитой.
+        </p>
+        <a href="index.html#contact" class="cta-btn-cyan inline-flex items-center gap-2 px-6 py-3 rounded-lg font-bold text-[14px] no-underline transition-all mt-3">
+          ОБСУДИТЬ ЗАДАЧУ С АНДРИАНОМ
+        </a>
+      </div>
+    </section>
+
+    <h2 class="font-display text-[20px] font-bold mb-4" style="color: var(--text-heading);">Компетенции и стек</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6">
+      <article class="stack-card spotlight-card rounded-xl p-6">
+        <div class="relative z-10">
+          <h3 class="font-mono text-[13px] uppercase tracking-[0.05em] mb-3 font-semibold" style="color: var(--accent-cyan);">
+            Backend &amp; Высоконагруженные API
+          </h3>
+          <p class="text-[13.5px] mb-3" style="color: var(--text-secondary);">
+            Проектирование асинхронных сервисов, REST API, микросервисов и оптимизация очередей.
+          </p>
+          <div>
+            <span class="tag">Python</span>
+            <span class="tag">FastAPI</span>
+            <span class="tag">Java</span>
+            <span class="tag">PostgreSQL</span>
+            <span class="tag">Redis</span>
+            <span class="tag">Git</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="stack-card spotlight-card rounded-xl p-6">
+        <div class="relative z-10">
+          <h3 class="font-mono text-[13px] uppercase tracking-[0.05em] mb-3 font-semibold" style="color: var(--accent-cyan);">
+            Telegram &amp; Discord Боты
+          </h3>
+          <p class="text-[13.5px] mb-3" style="color: var(--text-secondary);">
+            Боты с синхронизацией баз данных, платежными шлюзами, админ-панелями и защитой от спама.
+          </p>
+          <div>
+            <span class="tag">Telegram Bot API</span>
+            <span class="tag">Discord API</span>
+            <span class="tag">aiogram 3</span>
+            <span class="tag">Webhooks</span>
+            <span class="tag">Stripe / Cryptomus</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="stack-card spotlight-card rounded-xl p-6">
+        <div class="relative z-10">
+          <h3 class="font-mono text-[13px] uppercase tracking-[0.05em] mb-3 font-semibold" style="color: var(--accent-cyan);">
+            DevOps &amp; Серверная Инфраструктура
+          </h3>
+          <p class="text-[13.5px] mb-3" style="color: var(--text-secondary);">
+            Контейнеризация в Docker, настройка Ubuntu VPS, reverse proxy Nginx и автоматический деплой CI/CD.
+          </p>
+          <div>
+            <span class="tag">Docker</span>
+            <span class="tag">Ubuntu</span>
+            <span class="tag">Nginx</span>
+            <span class="tag">CI/CD GitHub</span>
+            <span class="tag">Systemd Watchdogs</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="stack-card spotlight-card rounded-xl p-6">
+        <div class="relative z-10">
+          <h3 class="font-mono text-[13px] uppercase tracking-[0.05em] mb-3 font-semibold" style="color: var(--accent-cyan);">
+            Безопасность &amp; Cloudflare
+          </h3>
+          <p class="text-[13.5px] mb-3" style="color: var(--text-secondary);">
+            Защита от DDoS-атак, SSL-сертификаты, правила WAF, кэширование на edge и мониторинг 24/7.
+          </p>
+          <div>
+            <span class="tag">Cloudflare</span>
+            <span class="tag">SSL / TLS</span>
+            <span class="tag">WAF Rules</span>
+            <span class="tag">DDoS Mitigation</span>
+            <span class="tag">Мониторинг 24/7</span>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</body>
+</html>
